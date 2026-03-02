@@ -5,10 +5,28 @@
 <div class="detail-wrap">
   <!-- Media -->
   <div class="detail-media">
-    {% if post.media_type == 'image' and post.image %}
-      <img src="{{ post.image.url }}" alt="post by {{ post.author.username }}">
-    {% elif post.media_type == 'video' and post.video %}
-      <video src="{{ post.video.url }}" controls></video>
+    {% if post.media.exists %}
+      <div class="media-carousel">
+        {% if post.media_count > 1 %}
+          <div class="media-count-indicator">{{ post.media_count }}</div>
+        {% endif %}
+        <div class="carousel-track">
+          {% for media in post.media.all %}
+            <div class="carousel-slide">
+              {% if media.is_image %}
+                <img src="{{ media.file.url }}" alt="post by {{ post.author.username }}" loading="lazy">
+              {% elif media.is_video %}
+                <video src="{{ media.file.url }}" controls></video>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        {% if post.media_count > 1 %}
+          <button class="carousel-button carousel-button-prev" aria-label="Previous">‹</button>
+          <button class="carousel-button carousel-button-next" aria-label="Next">›</button>
+          <div class="carousel-dots"></div>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
 

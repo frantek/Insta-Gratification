@@ -18,10 +18,28 @@
   </div>
 
   <a href="{% url 'posts:post_detail' post.pk %}">
-    {% if post.media_type == 'image' and post.image %}
-      <div class="post-media"><img src="{{ post.image.url }}" alt="post"></div>
-    {% elif post.media_type == 'video' and post.video %}
-      <div class="post-media"><video src="{{ post.video.url }}" controls></video></div>
+    {% if post.media.exists %}
+      <div class="media-carousel">
+        {% if post.media_count > 1 %}
+          <div class="media-count-indicator">{{ post.media_count }}</div>
+        {% endif %}
+        <div class="carousel-track">
+          {% for media in post.media.all %}
+            <div class="carousel-slide">
+              {% if media.is_image %}
+                <img src="{{ media.file.url }}" alt="post" loading="lazy">
+              {% elif media.is_video %}
+                <video src="{{ media.file.url }}" controls></video>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        {% if post.media_count > 1 %}
+          <button class="carousel-button carousel-button-prev" aria-label="Previous">‹</button>
+          <button class="carousel-button carousel-button-next" aria-label="Next">›</button>
+          <div class="carousel-dots"></div>
+        {% endif %}
+      </div>
     {% endif %}
   </a>
 
@@ -30,7 +48,7 @@
       {% csrf_token %}
       <button type="submit" title="Like">❤️</button>
     </form>
-    <a href="{% url 'posts:post_detail' post.pk %}" style="font-size:1.3rem;">💬</a>
+    <a href="{% url 'posts:post_detail' post.pk %}">💬</a>
   </div>
   <div class="like-count">{{ post.like_count }} like{{ post.like_count|pluralize }}</div>
   {% if post.caption %}

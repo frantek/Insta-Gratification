@@ -39,11 +39,18 @@
 <div class="post-grid">
   {% for post in owner.posts.all %}
     <a href="{% url 'posts:post_detail' post.pk %}" class="post-thumb">
-      {% if post.media_type == 'image' and post.image %}
-        <img src="{{ post.image.url }}" alt="post">
-      {% elif post.media_type == 'video' and post.video %}
-        <video src="{{ post.video.url }}" muted></video>
-      {% endif %}
+      {% with first_media=post.media.first %}
+        {% if first_media %}
+          {% if first_media.is_image %}
+            <img src="{{ first_media.file.url }}" alt="post" loading="lazy">
+          {% elif first_media.is_video %}
+            <video src="{{ first_media.file.url }}" muted></video>
+          {% endif %}
+          {% if post.media_count > 1 %}
+            <div class="media-count-indicator" style="top:8px;right:8px;">{{ post.media_count }}</div>
+          {% endif %}
+        {% endif %}
+      {% endwith %}
     </a>
   {% empty %}
     <p class="post-grid-empty">No posts yet.</p>

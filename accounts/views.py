@@ -23,7 +23,7 @@ def register(request):
 
 @login_required
 def profile(request, username):
-    owner = get_object_or_404(User, username=username)
+    owner = get_object_or_404(User.objects.prefetch_related('posts__media'), username=username)
     profile_obj, _ = UserProfile.objects.get_or_create(user=owner)
     is_following = Follow.objects.filter(
         follower=request.user, following=owner
