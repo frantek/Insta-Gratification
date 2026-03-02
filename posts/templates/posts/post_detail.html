@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Post by {{ post.author.username }} – Insta-Gratification{% endblock %}
+{% block content %}
+<style>
+  .detail-wrap { max-width:935px; margin:0 auto; display:flex; background:#fff; border:1px solid #dbdbdb; border-radius:4px; min-height:500px; }
+  .detail-media { flex:1; background:#000; display:flex; align-items:center; justify-content:center; min-width:0; }
+  .detail-media img, .detail-media video { max-width:100%; max-height:600px; object-fit:contain; display:block; }
+  .detail-sidebar { width:335px; flex-shrink:0; display:flex; flex-direction:column; border-left:1px solid #dbdbdb; }
+  .sidebar-header { display:flex; align-items:center; padding:14px 16px; border-bottom:1px solid #dbdbdb; }
+  .sidebar-avatar { width:32px; height:32px; border-radius:50%; background:#dbdbdb; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; margin-right:10px; overflow:hidden; }
+  .sidebar-avatar img { width:100%; height:100%; object-fit:cover; }
+  .sidebar-username { font-weight:700; font-size:0.9rem; }
+  .comments-area { flex:1; overflow-y:auto; padding:16px; }
+  .comment-item { margin-bottom:14px; font-size:0.9rem; }
+  .comment-item .author { font-weight:700; margin-right:4px; }
+  .comment-item .date { color:#8e8e8e; font-size:0.75rem; margin-top:2px; }
+  .replies { margin-left:24px; margin-top:8px; border-left:2px solid #dbdbdb; padding-left:12px; }
+  .reply-form { margin-top:8px; }
+  .reply-toggle { background:none; border:none; color:#0095f6; font-size:0.8rem; cursor:pointer; padding:0; margin-top:4px; }
+  .sidebar-actions { padding:8px 16px; border-top:1px solid #dbdbdb; display:flex; align-items:center; gap:12px; }
+  .sidebar-actions form button, .sidebar-actions form { display:inline; }
+  .sidebar-actions button { background:none; border:none; cursor:pointer; font-size:1.3rem; padding:4px; }
+  .like-info { padding:0 16px 8px; font-weight:700; font-size:0.9rem; }
+  .add-comment-form { border-top:1px solid #dbdbdb; padding:12px 16px; display:flex; gap:8px; }
+  .add-comment-form textarea { flex:1; border:none; outline:none; resize:none; font-size:0.9rem; background:transparent; }
+  .add-comment-form button { background:none; border:none; color:#0095f6; font-weight:700; font-size:0.9rem; cursor:pointer; }
+  .post-caption-block { padding:0 16px 12px; font-size:0.9rem; }
+  .post-caption-block .author { font-weight:700; margin-right:4px; }
+  .post-date-block { padding:0 16px 8px; color:#8e8e8e; font-size:0.75rem; }
+  @media (max-width: 700px) {
+    .detail-wrap { flex-direction: column; }
+    .detail-sidebar { width: 100%; border-left: none; border-top: 1px solid #dbdbdb; }
+  }
+</style>
+
+<div class="detail-wrap">
+  <!-- Media -->
+  <div class="detail-media">
+    {% if post.media_type == 'image' and post.image %}
+      <img src="{{ post.image.url }}" alt="post by {{ post.author.username }}">
+    {% elif post.media_type == 'video' and post.video %}
+      <video src="{{ post.video.url }}" controls></video>
+    {% endif %}
+  </div>
+
+  <!-- Sidebar -->
+  <div class="detail-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-avatar">
+        {% if post.author.profile.avatar %}
+          <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}">
+        {% else %}
+          {{ post.author.username|first|upper }}
+        {% endif %}
+      </div>
+      <a href="{% url 'accounts:profile' post.author.username %}" class="sidebar-username">{{ post.author.username }}</a>
+      {% if post.author == request.user %}
+        <form method="post" action="{% url 'posts:post_delete' post.pk %}" style="margin-left:auto;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" style="font-size:0.75rem;padding:4px 8px;"
+            onclick="return confirm('Delete this post?')">Delete</button>
+        </form>
+      {% endif %}
+    </div>
+
+    <!-- Caption -->
+    {% if post.caption %}
+      <div class="post-caption-block">
+        <span class="author">{{ post.author.username }}</span>{{ post.caption }}
+      </div>
+    {% endif %}
+    <div class="post-date-block">{{ post.created_at|date:"F j, Y" }}</div>
+
+    <!-- Comments -->
+    <div class="comments-area">
+      {% for comment in top_level_comments %}
+        <div class="comment-item" id="comment-{{ comment.pk }}">
+          <span class="author">{{ comment.author.username }}</span>{{ comment.body }}
+          <div class="date">{{ comment.created_at|date:"F j, Y" }}</div>
+
+          <!-- Replies -->
+          {% if comment.replies.exists %}
+            <div class="replies">
+              {% for reply in comment.replies.all %}
+                <div class="comment-item">
+                  <span class="author">{{ reply.author.username }}</span>{{ reply.body }}
+                  <div class="date">{{ reply.created_at|date:"F j, Y" }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <!-- Reply form toggle -->
+          <button class="reply-toggle" onclick="toggleReply({{ comment.pk }})">Reply</button>
+          <div id="reply-form-{{ comment.pk }}" style="display:none;" class="reply-form">
+            <form method="post" action="{% url 'posts:add_comment' post.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+              <textarea name="body" rows="2" placeholder="Reply to {{ comment.author.username }}…"
+                style="width:100%;border:1px solid #dbdbdb;border-radius:4px;padding:6px;font-size:0.85rem;resize:none;"></textarea>
+              <button type="submit" class="btn btn-primary" style="font-size:0.8rem;margin-top:4px;padding:4px 10px;">Post Reply</button>
+            </form>
+          </div>
+        </div>
+      {% empty %}
+        <p style="color:#8e8e8e;font-size:0.9rem;">No comments yet. Be the first!</p>
+      {% endfor %}
+    </div>
+
+    <!-- Like / action bar -->
+    <div class="sidebar-actions">
+      <form method="post" action="{% url 'posts:like_toggle' post.pk %}">
+        {% csrf_token %}
+        <button type="submit" title="{% if liked %}Unlike{% else %}Like{% endif %}">
+          {% if liked %}❤️{% else %}🤍{% endif %}
+        </button>
+      </form>
+    </div>
+    <div class="like-info">{{ post.like_count }} like{{ post.like_count|pluralize }}</div>
+
+    <!-- Add comment -->
+    <form method="post" action="{% url 'posts:add_comment' post.pk %}" class="add-comment-form">
+      {% csrf_token %}
+      <textarea name="body" rows="1" placeholder="Add a comment…">{{ comment_form.body.value|default:'' }}</textarea>
+      <button type="submit">Post</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleReply(id) {
+  var el = document.getElementById('reply-form-' + id);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

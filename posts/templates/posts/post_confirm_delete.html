@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete Post – Insta-Gratification{% endblock %}
+{% block content %}
+<div style="max-width:480px;margin:0 auto;background:#fff;padding:32px;border:1px solid #dbdbdb;border-radius:4px;text-align:center;">
+  <h2 style="margin-bottom:16px;">Delete Post?</h2>
+  <p style="color:#8e8e8e;margin-bottom:24px;">This action cannot be undone.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'posts:post_detail' post.pk %}" class="btn btn-outline" style="margin-left:8px;">Cancel</a>
+  </form>
+</div>
+{% endblock %}
