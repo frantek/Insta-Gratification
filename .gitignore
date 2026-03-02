@@ -144,6 +144,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+env.py
 
 # Spyder project settings
 .spyderproject
@@ -209,3 +210,4 @@ __marimo__/
 
 # User-uploaded media files
 media/
+env.py
