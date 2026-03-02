@@ -209,3 +209,4 @@ __marimo__/
 
 # User-uploaded media files
 media/
+env.py
