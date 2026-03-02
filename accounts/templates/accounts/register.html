@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Register – Insta-Gratification{% endblock %}
 {% block content %}
-<div style="max-width:400px;margin:40px auto;background:#fff;padding:32px;border:1px solid #dbdbdb;border-radius:4px;">
-  <h1 style="text-align:center;font-size:1.8rem;font-style:italic;margin-bottom:24px;">Insta-Gratification</h1>
-  <p style="text-align:center;color:#8e8e8e;margin-bottom:20px;">Sign up to see photos and videos from your friends.</p>
+<div class="auth-box">
+  <h1>Insta-Gratification</h1>
+  <p class="auth-footer" style="margin-bottom:20px;margin-top:0;">Sign up to see photos and videos from your friends.</p>
   <form method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -16,10 +16,10 @@
     {% if form.non_field_errors %}
       <ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
     {% endif %}
-    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;">Sign Up</button>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
   </form>
-  <p style="text-align:center;margin-top:16px;font-size:0.9rem;">
-    Already have an account? <a href="{% url 'accounts:login' %}" style="color:#0095f6;font-weight:600;">Log in</a>
+  <p class="auth-footer">
+    Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
   </p>
 </div>
 {% endblock %}

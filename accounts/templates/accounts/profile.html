@@ -1,19 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ owner.username }} – Insta-Gratification{% endblock %}
 {% block content %}
-<style>
-  .profile-header { display:flex; align-items:center; gap:32px; margin-bottom:40px; }
-  .profile-avatar img { width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #dbdbdb; }
-  .profile-avatar .no-avatar { width:100px; height:100px; border-radius:50%; background:#dbdbdb; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:#8e8e8e; }
-  .profile-info h2 { font-size:1.5rem; margin-bottom:12px; }
-  .profile-stats { display:flex; gap:24px; margin-bottom:12px; font-size:0.9rem; }
-  .profile-stats span strong { font-weight:700; }
-  .profile-bio { font-size:0.9rem; white-space: pre-line; }
-  .post-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
-  .post-thumb { aspect-ratio:1; overflow:hidden; position:relative; background:#000; }
-  .post-thumb img, .post-thumb video { width:100%; height:100%; object-fit:cover; display:block; }
-  .post-thumb:hover img, .post-thumb:hover video { opacity:0.7; }
-</style>
+
 <div class="profile-header">
   <div class="profile-avatar">
     {% if profile_obj.avatar %}
@@ -26,12 +14,12 @@
     <h2>
       {{ owner.username }}
       {% if user != owner %}
-        <form method="post" action="{% url 'accounts:follow_toggle' owner.username %}" style="display:inline;">
+        <form method="post" action="{% url 'accounts:follow_toggle' owner.username %}" style="display:inline; margin-left:12px;">
           {% csrf_token %}
           {% if is_following %}
-            <button type="submit" class="btn btn-outline" style="margin-left:12px;">Unfollow</button>
+            <button type="submit" class="btn btn-outline">Unfollow</button>
           {% else %}
-            <button type="submit" class="btn btn-primary" style="margin-left:12px;">Follow</button>
+            <button type="submit" class="btn btn-primary">Follow</button>
           {% endif %}
         </form>
       {% else %}
@@ -44,7 +32,7 @@
       <span><strong>{{ profile_obj.following_count }}</strong> following</span>
     </div>
     {% if profile_obj.bio %}<p class="profile-bio">{{ profile_obj.bio }}</p>{% endif %}
-    {% if profile_obj.website %}<p><a href="{{ profile_obj.website }}" style="color:#0095f6;">{{ profile_obj.website }}</a></p>{% endif %}
+    {% if profile_obj.website %}<p><a href="{{ profile_obj.website }}" class="profile-website">{{ profile_obj.website }}</a></p>{% endif %}
   </div>
 </div>
 
@@ -58,7 +46,7 @@
       {% endif %}
     </a>
   {% empty %}
-    <p style="grid-column:span 3;text-align:center;color:#8e8e8e;padding:40px 0;">No posts yet.</p>
+    <p class="post-grid-empty">No posts yet.</p>
   {% endfor %}
 </div>
 {% endblock %}

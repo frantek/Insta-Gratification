@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Login – Insta-Gratification{% endblock %}
 {% block content %}
-<div style="max-width:400px;margin:40px auto;background:#fff;padding:32px;border:1px solid #dbdbdb;border-radius:4px;">
-  <h1 style="text-align:center;font-size:1.8rem;font-style:italic;margin-bottom:24px;">Insta-Gratification</h1>
+<div class="auth-box">
+  <h1>Insta-Gratification</h1>
   <form method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -15,10 +15,10 @@
     {% if form.non_field_errors %}
       <ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
     {% endif %}
-    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;">Log In</button>
+    <button type="submit" class="btn btn-primary">Log In</button>
   </form>
-  <p style="text-align:center;margin-top:16px;font-size:0.9rem;">
-    Don't have an account? <a href="{% url 'accounts:register' %}" style="color:#0095f6;font-weight:600;">Sign up</a>
+  <p class="auth-footer">
+    Don't have an account? <a href="{% url 'accounts:register' %}">Sign up</a>
   </p>
 </div>
 {% endblock %}
