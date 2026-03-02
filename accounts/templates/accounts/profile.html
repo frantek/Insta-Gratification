@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block title %}{{ owner.username }} – Insta-Gratification{% endblock %}
 {% block content %}
+{% load static %}
+
+<div class="profile-container">
+{% if profile_obj.banner %}
+  <div class="profile-banner" style="width:100%; height:180px; background: url('{{ profile_obj.banner.url }}') center/cover no-repeat;"></div>
+{% else %}
+  <div class="profile-banner" style="width:100%; height:180px; background: linear-gradient(90deg, #ff9800 0%, #ff5722 100%);"></div>
+{% endif %}
 
 <div class="profile-header">
   <div class="profile-avatar">
@@ -35,6 +43,7 @@
     {% if profile_obj.website %}<p><a href="{{ profile_obj.website }}" class="profile-website">{{ profile_obj.website }}</a></p>{% endif %}
   </div>
 </div>
+</div>
 
 <div class="post-grid">
   {% for post in owner.posts.all %}
@@ -53,7 +62,12 @@
       {% endwith %}
     </a>
   {% empty %}
+  <div style="text-align:center; margin-top:16px;">
     <p class="post-grid-empty">No posts yet.</p>
+      <a aria-label="Create New Post" href="{% url 'posts:post_create' %}" class="btn">
+        <img src="{% static 'images/add.jpg' %}" alt="Create New Post" style="width:32px; height:32px;">
+      </a>
+    </div>
   {% endfor %}
 </div>
 {% endblock %}
