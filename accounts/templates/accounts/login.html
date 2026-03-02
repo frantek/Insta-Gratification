@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Login – Insta-Gratification{% endblock %}
+{% block content %}
+<div style="max-width:400px;margin:40px auto;background:#fff;padding:32px;border:1px solid #dbdbdb;border-radius:4px;">
+  <h1 style="text-align:center;font-size:1.8rem;font-style:italic;margin-bottom:24px;">Insta-Gratification</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+    {% endfor %}
+    {% if form.non_field_errors %}
+      <ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+    {% endif %}
+    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;">Log In</button>
+  </form>
+  <p style="text-align:center;margin-top:16px;font-size:0.9rem;">
+    Don't have an account? <a href="{% url 'accounts:register' %}" style="color:#0095f6;font-weight:600;">Sign up</a>
+  </p>
+</div>
+{% endblock %}

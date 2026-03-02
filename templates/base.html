@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Insta-Gratification{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafafa; color: #262626; }
+    a { color: inherit; text-decoration: none; }
+    nav { background: #fff; border-bottom: 1px solid #dbdbdb; padding: 8px 0; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { max-width: 935px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-size: 1.5rem; font-weight: 700; font-style: italic; }
+    .nav-links a { margin-left: 16px; font-size: 0.9rem; font-weight: 600; color: #262626; }
+    .nav-links a:hover { color: #8e8e8e; }
+    .container { max-width: 935px; margin: 30px auto; padding: 0 16px; }
+    .btn { display: inline-block; padding: 7px 16px; border-radius: 4px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; }
+    .btn-primary { background: #0095f6; color: #fff; }
+    .btn-primary:hover { background: #1877f2; }
+    .btn-outline { background: transparent; border: 1px solid #dbdbdb; color: #262626; }
+    .btn-outline:hover { background: #fafafa; }
+    .btn-danger { background: #ed4956; color: #fff; }
+    .messages { list-style: none; margin-bottom: 16px; }
+    .messages li { padding: 10px; border-radius: 4px; margin-bottom: 8px; background: #d4edda; color: #155724; }
+    .messages li.error { background: #f8d7da; color: #721c24; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: #8e8e8e; text-transform: uppercase; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 9px 10px; border: 1px solid #dbdbdb; border-radius: 4px; font-size: 0.9rem; background: #fafafa; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #a8a8a8; background: #fff; }
+    .errorlist { list-style: none; color: #ed4956; font-size: 0.8rem; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="{% url 'posts:feed' %}" class="nav-logo">Insta-Gratification</a>
+      <div class="nav-links">
+        {% if user.is_authenticated %}
+          <a href="{% url 'posts:post_create' %}">+ New Post</a>
+          <a href="{% url 'accounts:profile' user.username %}">{{ user.username }}</a>
+          <a href="{% url 'accounts:edit_profile' %}">Edit Profile</a>
+          <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:none;border:none;cursor:pointer;font-size:0.9rem;font-weight:600;color:#262626;margin-left:16px;">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Login</a>
+          <a href="{% url 'accounts:register' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

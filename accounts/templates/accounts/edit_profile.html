@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile – Insta-Gratification{% endblock %}
+{% block content %}
+<div style="max-width:480px;margin:0 auto;background:#fff;padding:32px;border:1px solid #dbdbdb;border-radius:4px;">
+  <h2 style="margin-bottom:24px;">Edit Profile</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{% url 'accounts:profile' request.user.username %}" class="btn btn-outline" style="margin-left:8px;">Cancel</a>
+  </form>
+</div>
+{% endblock %}
