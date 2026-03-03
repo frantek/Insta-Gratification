@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Register – Insta-Gratification{% endblock %}
 {% block content %}
+<div class="auth-background">
 <div class="auth-box">
   <h1>Insta-Gratification</h1>
   <p class="auth-footer" style="margin-bottom:20px;margin-top:0;">Sign up to see photos and videos from your friends.</p>
@@ -21,5 +22,6 @@
   <p class="auth-footer">
     Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
   </p>
+</div>
 </div>
 {% endblock %}
