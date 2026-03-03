@@ -19,13 +19,15 @@
   <nav>
     <div class="nav-inner">
       <div class="title-section">
+      <a href="{% url 'posts:feed' %}" style="text-decoration:none">
       <img src="{% static 'images/logo.png' %}" style="width:30px;height:30px" alt="Insta-Gratification Logo" class="nav-logo-icon">
       <img src="{% static 'images/title.png' %}" style="height:30px" alt="Insta-Gratification Title" class="nav-title-icon">
+      </a>
       </div>
       <div class="nav-links">
         {% if user.is_authenticated %}
-          <a class="me-4"href="{% url 'posts:post_create' %}">+ New Post</a>
           <p>logged in as {{ user.username }}</p>
+          <a class="me-4" href="{% url 'posts:post_create' %}"><img src="{% static 'images/add.jpg' %}" style='width:30px;height:30px;' alt="New Post" class="new-post-icon"></a>
           <a href="{% url 'accounts:profile' user.username %}"><img src="{% static 'images/user.png' %}" style='width:30px;height:30px;' alt="Edit Profile" class="edit-profile-icon"></a>
           <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
             {% csrf_token %}

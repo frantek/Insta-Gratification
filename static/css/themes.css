@@ -37,7 +37,7 @@
 /* Dark Theme - Instagram Dark Mode */
 :root[data-theme="dark"] {
   --bg-primary: #000000;
-  --bg-secondary: #121212;
+  --bg-secondary: #ffffff;
   --bg-tertiary: #1a1a1a;
   --border-primary: #262626;
   --border-secondary: #363636;
@@ -70,7 +70,7 @@
 /* Dim Theme - Instagram Dim Mode */
 :root[data-theme="dim"] {
   --bg-primary: #15202b;
-  --bg-secondary: #192734;
+  --bg-secondary: #ffffff;
   --bg-tertiary: #1e2732;
   --border-primary: #38444d;
   --border-secondary: #2c3640;
@@ -623,16 +623,6 @@ nav {
   padding: 40px 0;
 }
 
-/* login pages */
-.auth-background {
-  background: url('/static/images/1116221.jpg') center/cover no-repeat,
-  linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Post Detail Page */
 .detail-wrap {
   max-width: 935px;
@@ -859,6 +849,17 @@ nav {
 }
 
 /* Auth Forms (Login/Register) */
+
+/* login pages */
+.auth-background {
+  background: url('/static/images/1116221.jpg') center/cover no-repeat,
+  linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .auth-box {
   max-width: 400px;
   margin: 40px auto;
