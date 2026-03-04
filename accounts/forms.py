@@ -16,7 +16,7 @@ class RegisterForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('bio', 'avatar', 'website')
+        fields = ('bio', 'avatar', 'banner')
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3}),
         }
