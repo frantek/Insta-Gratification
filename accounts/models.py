@@ -6,6 +6,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    banner = models.ImageField(upload_to='banners/', blank=True, null=True)
     website = models.URLField(blank=True)
 
     def __str__(self):
