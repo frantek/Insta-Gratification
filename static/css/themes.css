@@ -37,7 +37,7 @@
 /* Dark Theme - Instagram Dark Mode */
 :root[data-theme="dark"] {
   --bg-primary: #000000;
-  --bg-secondary: #ffffff;
+  --bg-secondary: #121212;
   --bg-tertiary: #1a1a1a;
   --border-primary: #262626;
   --border-secondary: #363636;
@@ -70,7 +70,7 @@
 /* Dim Theme - Instagram Dim Mode */
 :root[data-theme="dim"] {
   --bg-primary: #15202b;
-  --bg-secondary: #ffffff;
+  --bg-secondary: #1e2732;
   --bg-tertiary: #1e2732;
   --border-primary: #38444d;
   --border-secondary: #2c3640;
@@ -145,6 +145,24 @@ nav {
   font-weight: 700;
   font-style: italic;
   color: var(--text-primary);
+}
+
+.nav-logo-icon,
+.nav-title-icon {
+  filter: brightness(1);
+  transition: filter 0.3s ease;
+}
+
+/* Make logo visible in dark mode - add white glow to preserve yellow */
+:root[data-theme="dark"] .nav-logo-icon,
+:root[data-theme="dark"] .nav-title-icon {
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+}
+
+/* Make logo visible in dim mode - add white glow to preserve yellow */
+:root[data-theme="dim"] .nav-logo-icon,
+:root[data-theme="dim"] .nav-title-icon {
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
 }
 
 .nav-links {
