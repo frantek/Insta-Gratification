@@ -1107,19 +1107,95 @@ nav {
   border-radius: 8px;
   overflow: hidden;
   background: var(--bg-tertiary);
-  cursor: move;
-  transition: all 0.2s ease;
+  cursor: grab;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: 2px solid transparent;
+  user-select: none;
 }
 
 .preview-item:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
   border-color: var(--btn-primary-bg);
 }
 
+.preview-item:active {
+  cursor: grabbing;
+}
+
 .preview-item.dragging {
-  opacity: 0.5;
-  transform: scale(0.95);
+  opacity: 0.3;
+  transform: scale(0.9);
+}
+
+/* Floating drag ghost that follows cursor */
+.drag-ghost {
+  opacity: 0.95;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+              0 0 0 1px rgba(255, 87, 34, 0.3);
+  cursor: grabbing;
+  transform: rotate(5deg) scale(1.05);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  background: var(--bg-tertiary);
+}
+
+.drag-ghost .preview-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.drag-ghost .preview-content img,
+.drag-ghost .preview-content video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Drop target indicators with glowing effect */
+.preview-item.drop-target-before {
+  position: relative;
+}
+
+.preview-item.drop-target-before::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--btn-primary-bg);
+  border-radius: 2px;
+  box-shadow: 0 0 12px var(--btn-primary-bg);
+  animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+.preview-item.drop-target-after {
+  position: relative;
+}
+
+.preview-item.drop-target-after::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--btn-primary-bg);
+  border-radius: 2px;
+  box-shadow: 0 0 12px var(--btn-primary-bg);
+  animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.6;
+    transform: scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
 .preview-content {
