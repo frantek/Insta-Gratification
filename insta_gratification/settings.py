@@ -25,7 +25,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-ALLOWED_HOSTS = ['*'] if DEBUG else os.environ.get('ALLOWED_HOSTS', '').split(',')
+# ALLOWED_HOSTS configuration
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    # Production: get from environment or use a sensible default
+    allowed = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+    ALLOWED_HOSTS = [host.strip() for host in allowed.split(',') if host.strip()]
+    # Also allow *.herokuapp.com for Heroku deployments
+    ALLOWED_HOSTS.extend(['*.herokuapp.com', 'herokuapp.com'])
 
 
 # Application definition
@@ -135,10 +143,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Cloudinary configuration for production
+# Cloudinary configuration for production media storage
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
-if CLOUDINARY_URL:
-    # Parse Cloudinary URL
+if CLOUDINARY_URL and not DEBUG:
+    # Use Cloudinary for production
     import re
     match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
     if match:
@@ -148,6 +156,11 @@ if CLOUDINARY_URL:
             'API_SECRET': match.group(2)
         }
         DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+        # Override media URL to use Cloudinary
+        MEDIA_URL = f'https://res.cloudinary.com/{match.group(3)}/image/upload/'
+else:
+    # Use local filesystem for development
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Authentication redirects
 LOGIN_URL = '/accounts/login/'
