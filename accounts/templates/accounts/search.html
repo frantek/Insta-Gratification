@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Search Users – Insta-Gratification{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="search-container">
+  <h2>Search Users</h2>
+  
+  <form method="get" action="{% url 'accounts:search' %}" class="search-form">
+    <input 
+      type="text" 
+      name="q" 
+      value="{{ query }}" 
+      placeholder="Search for users..." 
+      class="search-input"
+      autofocus
+    >
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  {% if query %}
+    <div class="search-results">
+      <h3>Results for "{{ query }}"</h3>
+      
+      {% if results %}
+        <div class="user-list">
+          {% for result_user in results %}
+            <div class="user-card">
+              <a href="{% url 'accounts:profile' result_user.username %}" class="user-card-link">
+                <div class="user-avatar-small">
+                  {% if result_user.profile.avatar %}
+                    <img src="{{ result_user.profile.avatar.url }}" alt="{{ result_user.username }}">
+                  {% else %}
+                    <div class="no-avatar-small">{{ result_user.username|first|upper }}</div>
+                  {% endif %}
+                </div>
+                <div class="user-info">
+                  <div class="user-username">
+                    {{ result_user.username }}
+                    {% if result_user.pk in new_user_ids %}
+                      <span class="new-user-badge">New</span>
+                    {% endif %}
+                  </div>
+                  {% if result_user.profile.bio %}
+                    <div class="user-bio-preview">{{ result_user.profile.bio|truncatewords:10 }}</div>
+                  {% endif %}
+                  <div class="user-stats-small">
+                    {{ result_user.posts.count }} posts · 
+                    {{ result_user.profile.follower_count }} followers
+                  </div>
+                </div>
+              </a>
+              {% if result_user != user %}
+                <form method="post" action="{% url 'accounts:follow_toggle' result_user.username %}" class="follow-form-inline">
+                  {% csrf_token %}
+                  {% if result_user.pk in following_ids %}
+                    <button type="submit" class="btn btn-outline btn-sm">Unfollow</button>
+                  {% else %}
+                    <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+                  {% endif %}
+                </form>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="no-results">No users found matching "{{ query }}"</p>
+      {% endif %}
+    </div>
+  {% else %}
+    {% if suggested_users %}
+      <div class="suggested-users">
+        <h3>Suggested For You</h3>
+        <div class="user-list">
+          {% for suggested_user in suggested_users %}
+            <div class="user-card">
+              <a href="{% url 'accounts:profile' suggested_user.username %}" class="user-card-link">
+                <div class="user-avatar-small">
+                  {% if suggested_user.profile.avatar %}
+                    <img src="{{ suggested_user.profile.avatar.url }}" alt="{{ suggested_user.username }}">
+                  {% else %}
+                    <div class="no-avatar-small">{{ suggested_user.username|first|upper }}</div>
+                  {% endif %}
+                </div>
+                <div class="user-info">
+                  <div class="user-username">
+                    {{ suggested_user.username }}
+                    {% if suggested_user.pk in new_user_ids %}
+                      <span class="new-user-badge">New</span>
+                    {% endif %}
+                  </div>
+                  {% if suggested_user.profile.bio %}
+                    <div class="user-bio-preview">{{ suggested_user.profile.bio|truncatewords:10 }}</div>
+                  {% endif %}
+                  <div class="user-stats-small">
+                    {{ suggested_user.posts.count }} posts · 
+                    {{ suggested_user.profile.follower_count }} followers
+                  </div>
+                </div>
+              </a>
+              <form method="post" action="{% url 'accounts:follow_toggle' suggested_user.username %}" class="follow-form-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+              </form>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <p class="search-hint">Enter a username to search for users</p>
+    {% endif %}
+  {% endif %}
+</div>
+
+{% endblock %}
