@@ -165,6 +165,29 @@ nav {
   filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
 }
 
+.new-post-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.new-post-icon {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-color: var(--text-primary);
+  -webkit-mask: url('/static/images/add.svg') center / contain no-repeat;
+  mask: url('/static/images/add.svg') center / contain no-repeat;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.new-post-link:hover .new-post-icon {
+  background-color: var(--text-secondary);
+  transform: scale(1.08);
+}
+
 .nav-links {
   display: flex;
   align-items: center;
