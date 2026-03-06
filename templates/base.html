@@ -27,6 +27,7 @@
       <div class="nav-links">
         {% if user.is_authenticated %}
           <p>logged in as {{ user.username }}</p>
+          <a class="me-4 search-link" href="{% url 'accounts:search' %}" aria-label="Search Users"><span class="search-icon" aria-hidden="true"></span></a>
           <a class="me-4 new-post-link" href="{% url 'posts:post_create' %}" aria-label="New Post"><span class="new-post-icon" aria-hidden="true"></span></a>
           <a href="{% url 'accounts:profile' user.username %}"><img src="{% static 'images/user.png' %}" style='width:30px;height:30px;' alt="Edit Profile" class="edit-profile-icon"></a>
           <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
