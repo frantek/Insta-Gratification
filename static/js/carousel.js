@@ -72,8 +72,14 @@
     }
 
     handleDragStart(e) {
+      // Don't interfere with video controls or interactions
+      if (e.target && (e.target.tagName === 'VIDEO' || e.target.closest('video'))) {
+        return;
+      }
+
       this.isDragging = true;
       this.startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+      this.currentX = this.startX;
       this.track.style.cursor = 'grabbing';
       this.track.style.transition = 'none';
     }
@@ -156,6 +162,17 @@
   function initCarousels() {
     const carousels = document.querySelectorAll('.media-carousel');
     carousels.forEach(carousel => new MediaCarousel(carousel));
+    
+    // Prevent video interactions from propagating to parent links and carousel
+    const videos = document.querySelectorAll('.carousel-slide video');
+    videos.forEach(video => {
+      // Stop all interaction events from propagating
+      ['click', 'mousedown', 'touchstart'].forEach(eventType => {
+        video.addEventListener(eventType, (e) => {
+          e.stopPropagation();
+        }, true);
+      });
+    });
   }
 
   // Initialize when DOM is ready

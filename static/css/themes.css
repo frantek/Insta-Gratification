@@ -1001,7 +1001,14 @@ nav {
   object-fit: contain;
   display: block;
   user-select: none;
+}
+
+.carousel-slide img {
   pointer-events: none;
+}
+
+.carousel-slide video {
+  pointer-events: auto;
 }
 
 .carousel-button {
@@ -1069,6 +1076,13 @@ nav {
 /* For feed posts - smaller carousel */
 .feed-post .media-carousel {
   max-height: 600px;
+}
+
+/* Allow video controls in feed carousel links */
+.feed-post a .carousel-slide video {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
 }
 
 /* For detail page - larger carousel */
